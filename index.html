@@ -2658,98 +2658,82 @@ document.getElementById('sync-dl-sw').addEventListener('click',downloadSwJs);
 if(gistId) document.getElementById('sb-sync-dot')?.classList.add('visible');
 
 // ── Auto-sync ──
-let _autoSyncTimer=null;
-let _autoSyncEnabled=!!(gistToken&&gistId);
+let _autoSyncTimer = null;
+let _autoSyncEnabled = !!(gistToken && gistId);
+let _lastEditTime = 0;   // timestamp of last local data change
 
-// Called whenever data changes — debounces 8s then silently pushes
+// Wrap localStorage.setItem to track edits + trigger auto-push
+const _origSetItem = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function(k, v){
+  _origSetItem(k, v);
+  if(k && k.startsWith('tracker_') && k !== 'tracker_gist_token' && k !== 'tracker_gist_id' && k !== 'tracker_last_push'){
+    _lastEditTime = Date.now();
+    scheduleAutoSync();
+  }
+};
+
+// Debounced auto-push: fires 8s after the last local change
 function scheduleAutoSync(){
   if(!_autoSyncEnabled) return;
   clearTimeout(_autoSyncTimer);
-  _autoSyncTimer=setTimeout(()=>silentPush(),8000);
+  _autoSyncTimer = setTimeout(()=>silentPush(), 8000);
 }
 
 async function silentPush(){
-  if(!gistToken||!gistId) return;
+  if(!gistToken || !gistId) return;
   try{
-    const payload={description:'Activity Tracker sync',public:false,
-      files:{'activity-tracker.json':{content:JSON.stringify({...allTrackerData(),_pushedAt:new Date().toISOString()},null,2)}}};
-    const headers={'Authorization':`Bearer ${gistToken}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'};
-    const res=await fetch(`https://api.github.com/gists/${gistId}`,{method:'PATCH',headers,body:JSON.stringify(payload)});
+    const payload = {description:'Activity Tracker sync', public:false,
+      files:{'activity-tracker.json':{content:JSON.stringify({...allTrackerData(), _pushedAt:new Date().toISOString()}, null, 2)}}};
+    const headers = {'Authorization':`Bearer ${gistToken}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'};
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, {method:'PATCH', headers, body:JSON.stringify(payload)});
     if(res.ok){
+      _origSetItem('tracker_last_push', Date.now().toString());
       document.getElementById('sb-sync-dot')?.classList.add('visible');
-      // Flash the sync icon briefly to show it saved
-      const btn=document.getElementById('sb-sync-btn');
-      if(btn){ btn.style.opacity='0.5'; setTimeout(()=>btn.style.opacity='',600); }
+      const btn = document.getElementById('sb-sync-btn');
+      if(btn){ btn.style.opacity='0.4'; setTimeout(()=>btn.style.opacity='', 500); }
     }
   } catch(_){}
 }
 
-// On page load: check if cloud has newer data and offer to pull
-async function autoCheckCloud(){
-  if(!gistToken||!gistId) return;
+// Update last-push timestamp when user manually pushes too
+const _origGistPush = gistPush;
+gistPush = async function(){
+  await _origGistPush();
+  if(gistId) _origSetItem('tracker_last_push', Date.now().toString());
+};
+
+// Re-enable auto-sync once token+id are configured for the first time
+document.getElementById('sync-push-btn').addEventListener('click', ()=>{
+  setTimeout(()=>{ _autoSyncEnabled = !!(gistToken && gistId); }, 500);
+}, true);
+
+// ── Auto-pull: poll cloud every 60s, apply instantly if newer and user is idle ──
+async function pollCloud(){
+  if(!gistToken || !gistId) return;
+  // Skip if user edited in the last 15s (let their push finish first)
+  if(Date.now() - _lastEditTime < 15000) return;
   try{
-    const res=await fetch(`https://api.github.com/gists/${gistId}`,
+    const res = await fetch(`https://api.github.com/gists/${gistId}`,
       {headers:{'Authorization':`Bearer ${gistToken}`,'Accept':'application/vnd.github.v3+json'}});
     if(!res.ok) return;
-    const gist=await res.json();
-    const content=gist.files['activity-tracker.json']?.content;
+    const gist = await res.json();
+    const content = gist.files['activity-tracker.json']?.content;
     if(!content) return;
-    const obj=JSON.parse(content);
+    const obj = JSON.parse(content);
     if(!obj._pushedAt) return;
-    const cloudTime=new Date(obj._pushedAt).getTime();
-    const localTime=parseInt(localStorage.getItem('tracker_last_push')||'0');
-    if(cloudTime>localTime+5000){
-      // Show a subtle banner instead of blocking confirm
-      showPullBanner(obj,cloudTime);
+    const cloudTime = new Date(obj._pushedAt).getTime();
+    const storedLocal = parseInt(localStorage.getItem('tracker_last_push')||'0');
+    if(cloudTime > storedLocal + 5000){
+      // Newer cloud data and user is idle — apply silently
+      _pendingPull = {obj, token:gistToken, id:gistId};
+      applyPull();
     }
   } catch(_){}
 }
 
-function showPullBanner(obj,cloudTime){
-  if(document.getElementById('sync-pull-banner')) return; // already showing
-  const bar=document.createElement('div');
-  bar.id='sync-pull-banner';
-  bar.style.cssText='position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);'+
-    'background:#1e2130;border:1px solid var(--accent);border-radius:12px;padding:10px 16px;'+
-    'display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text);z-index:9999;'+
-    'box-shadow:0 4px 24px rgba(0,0,0,.5);white-space:nowrap;';
-  const ago=Math.round((Date.now()-cloudTime)/60000);
-  const agoStr=ago<1?'just now':ago===1?'1 min ago':`${ago} min ago`;
-  bar.innerHTML=`<span>☁ Newer cloud data available <span style="color:var(--text-muted)">(${agoStr})</span></span>`+
-    `<button id="sync-banner-apply" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Apply</button>`+
-    `<button id="sync-banner-dismiss" style="background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;padding:0 2px">✕</button>`;
-  document.body.appendChild(bar);
-  document.getElementById('sync-banner-apply').addEventListener('click',()=>{
-    bar.remove();
-    _pendingPull={obj,token:gistToken,id:gistId};
-    applyPull();
-  });
-  document.getElementById('sync-banner-dismiss').addEventListener('click',()=>bar.remove());
-  // Auto-dismiss after 20s
-  setTimeout(()=>bar.remove(),20000);
-}
-
-// Wrap localStorage.setItem to trigger auto-sync on tracker_ key changes
-const _origSetItem=localStorage.setItem.bind(localStorage);
-localStorage.setItem=function(k,v){
-  _origSetItem(k,v);
-  if(k&&k.startsWith('tracker_')&&k!=='tracker_gist_token'&&k!=='tracker_gist_id') scheduleAutoSync();
-};
-
-// Update last-push timestamp after every successful push
-const _origGistPush=gistPush;
-gistPush=async function(){
-  await _origGistPush();
-  if(gistId) _origSetItem('tracker_last_push',Date.now().toString());
-};
-
-// Re-enable auto-sync if token+id get configured for the first time
-document.getElementById('sync-push-btn').addEventListener('click',()=>{
-  setTimeout(()=>{ _autoSyncEnabled=!!(gistToken&&gistId); },500);
-},true);
-
-// Run cloud check 2s after page load (non-blocking)
-setTimeout(autoCheckCloud,2000);
+// First check 2s after load, then every 60s
+setTimeout(pollCloud, 2000);
+setInterval(pollCloud, 60000);
 </script>
 </body>
 </html>
