@@ -529,6 +529,7 @@
     .holiday-select { background:var(--surface2); border:1px solid var(--border); border-radius:7px; color:var(--text); padding:5px 9px; font-size:12px; outline:none; cursor:pointer; max-width:170px; }
     .holiday-select:focus { border-color:var(--accent); }
 
+    .wow-view { flex-direction:column; height:100%; overflow:hidden; }
     /* ── WoW / Raider.io tab ── */
     .wow-topbar { display:flex; align-items:center; gap:12px; padding:14px 20px 12px; flex-wrap:wrap; border-bottom:1px solid var(--border); flex-shrink:0; }
     .wow-topbar h1 { font-size:18px; font-weight:700; white-space:nowrap; }
@@ -754,7 +755,7 @@
 </div>
 
 <!-- ── WoW / Raider.io view ── -->
-<div id="view-wow" class="view" style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+<div id="view-wow" class="view wow-view">
   <div class="wow-topbar" style="flex-direction:column;align-items:flex-start;gap:8px;">
     <div style="display:flex;align-items:center;gap:10px;width:100%;flex-wrap:wrap;">
       <h1>⚔ WoW</h1>
