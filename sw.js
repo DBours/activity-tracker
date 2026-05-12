@@ -1,11 +1,16 @@
-const CACHE = 'activity-tracker-v1';
+const CACHE = 'activity-tracker-v2';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.add(self.registration.scope)));
 });
 
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+// Delete ALL old caches on activate so stale HTML is wiped immediately
+self.addEventListener('activate', e => e.waitUntil(
+  caches.keys()
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(() => self.clients.claim())
+));
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
@@ -14,7 +19,7 @@ self.addEventListener('fetch', e => {
     e.request.headers.get('accept')?.includes('text/html');
 
   if (isHTML) {
-    // Network-first for HTML: always fetch latest, fall back to cache if offline
+    // Network-first: always fetch latest HTML, fall back to cache only if offline
     e.respondWith(
       fetch(e.request)
         .then(res => {
@@ -27,7 +32,7 @@ self.addEventListener('fetch', e => {
         .catch(() => caches.match(e.request))
     );
   } else {
-    // Cache-first for everything else (icons, fonts, etc.)
+    // Cache-first for assets
     e.respondWith(
       caches.match(e.request).then(r => r || fetch(e.request).then(res => {
         const clone = res.clone();
