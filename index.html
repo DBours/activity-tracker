@@ -528,6 +528,63 @@
     .day-col.holiday-col { background-color:rgba(245,158,11,.025) !important; }
     .holiday-select { background:var(--surface2); border:1px solid var(--border); border-radius:7px; color:var(--text); padding:5px 9px; font-size:12px; outline:none; cursor:pointer; max-width:170px; }
     .holiday-select:focus { border-color:var(--accent); }
+
+    /* ── WoW / Raider.io tab ── */
+    .wow-topbar { display:flex; align-items:center; gap:12px; padding:14px 20px 12px; flex-wrap:wrap; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .wow-topbar h1 { font-size:18px; font-weight:700; white-space:nowrap; }
+    .wow-setup-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-left:auto; }
+    .wow-input { background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:7px 11px; font-size:13px; outline:none; }
+    .wow-input:focus { border-color:var(--accent); }
+    select.wow-input { width:72px; cursor:pointer; }
+    #wow-realm { width:130px; }
+    #wow-name  { width:130px; }
+    .wow-load-btn, .wow-refresh-btn { background:var(--accent); border:none; color:#fff; border-radius:8px; padding:7px 14px; font-size:13px; cursor:pointer; font-weight:600; }
+    .wow-load-btn:hover, .wow-refresh-btn:hover { opacity:.85; }
+    .wow-refresh-btn { background:var(--surface2); color:var(--text); border:1px solid var(--border); padding:7px 10px; font-size:16px; }
+    .wow-body { padding:16px 20px; overflow-y:auto; flex:1; min-height:0; }
+    /* Character card */
+    .wow-card { display:flex; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px; align-items:flex-start; flex-wrap:wrap; }
+    .wow-thumb { width:80px; height:80px; border-radius:10px; object-fit:cover; background:var(--surface2); flex-shrink:0; border:2px solid var(--border); }
+    .wow-char-meta { flex:1; min-width:160px; }
+    .wow-char-name { font-size:22px; font-weight:800; line-height:1.1; }
+    .wow-char-sub  { font-size:12px; color:var(--text-muted); margin-top:3px; }
+    .wow-char-ilvl { font-size:12px; color:var(--text-muted); margin-top:6px; }
+    .wow-char-ilvl strong { color:var(--text); font-size:15px; }
+    .wow-score-block { text-align:right; }
+    .wow-score-num  { font-size:38px; font-weight:800; line-height:1; }
+    .wow-score-lbl  { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .wow-scores-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; width:100%; }
+    .wow-pill { background:var(--surface2); border:1px solid var(--border); border-radius:9px; padding:7px 13px; text-align:center; min-width:72px; }
+    .wow-pill-lbl { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
+    .wow-pill-val { font-size:17px; font-weight:700; }
+    /* Sub-tabs */
+    .wow-tabs { display:flex; gap:4px; margin-bottom:14px; }
+    .wow-tab-btn { background:none; border:1px solid var(--border); color:var(--text-muted); border-radius:8px; padding:6px 16px; font-size:12px; cursor:pointer; font-weight:600; transition:all .12s; }
+    .wow-tab-btn.active { background:color-mix(in srgb,var(--accent) 18%,transparent); color:var(--accent); border-color:var(--accent); }
+    /* M+ runs table */
+    .wow-runs-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .wow-runs-table th { text-align:left; padding:5px 10px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); font-weight:600; }
+    .wow-runs-table td { padding:9px 10px; border-bottom:1px solid rgba(46,51,72,.4); vertical-align:middle; }
+    .wow-runs-table tr:last-child td { border-bottom:none; }
+    .wow-runs-table tr:hover td { background:var(--surface2); }
+    .wow-key-badge { display:inline-flex; align-items:center; justify-content:center; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:2px 8px; font-weight:800; font-size:13px; min-width:30px; }
+    .wow-timed   { color:#10b981; }
+    .wow-overtime{ color:#ef4444; }
+    .wow-upg { color:#10b981; font-size:10px; margin-left:4px; }
+    .wow-affix-icon { font-size:10px; background:var(--surface2); border-radius:4px; padding:1px 5px; margin-right:3px; color:var(--text-muted); }
+    /* Raid progress */
+    .wow-raid-block { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+    .wow-raid-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+    .wow-raid-summary { font-size:12px; color:var(--text-muted); margin-bottom:10px; }
+    .wow-diff-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; }
+    .wow-diff-lbl { width:56px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; }
+    .wow-bar-wrap { flex:1; background:var(--surface2); border-radius:4px; height:8px; overflow:hidden; }
+    .wow-bar-fill { height:100%; border-radius:4px; transition:width .5s ease; }
+    .wow-diff-count { width:36px; text-align:right; font-size:12px; font-weight:700; }
+    .wow-loading { padding:40px; text-align:center; color:var(--text-muted); font-size:14px; }
+    .wow-error { margin:16px 0; padding:12px 16px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); border-radius:10px; color:#ef4444; font-size:13px; }
+    .wow-profile-link { font-size:12px; color:var(--accent); text-decoration:none; margin-left:8px; }
+    .wow-profile-link:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
@@ -567,6 +624,12 @@
       <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
     </svg>
     <span class="sb-label">Markets</span>
+  </button>
+  <button class="sb-item" data-view="wow" title="WoW Character">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    <span class="sb-label">WoW</span>
   </button>
   <button class="sb-item sb-sync-btn" id="sb-sync-btn" title="Sync & Devices">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -688,6 +751,29 @@
     <button class="stab" data-stab="alerts">Alerts</button>
   </div>
   <div class="stocks-body" id="stocks-body"></div>
+</div>
+
+<!-- ── WoW / Raider.io view ── -->
+<div id="view-wow" class="view" style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+  <div class="wow-topbar">
+    <h1>⚔ WoW Character</h1>
+    <div class="wow-setup-row">
+      <select id="wow-region" class="wow-input">
+        <option value="eu">EU</option>
+        <option value="us">US</option>
+        <option value="tw">TW</option>
+        <option value="kr">KR</option>
+        <option value="cn">CN</option>
+      </select>
+      <input id="wow-realm" class="wow-input" placeholder="Realm (e.g. Draenor)" autocomplete="off" spellcheck="false">
+      <input id="wow-name"  class="wow-input" placeholder="Character name" autocomplete="off" spellcheck="false">
+      <button class="wow-load-btn" id="wow-load-btn">Load</button>
+      <button class="wow-refresh-btn" id="wow-refresh-btn" title="Refresh">↻</button>
+    </div>
+  </div>
+  <div class="wow-body" id="wow-body">
+    <div class="wow-loading">Enter your region, realm and character name to load your profile.</div>
+  </div>
 </div>
 
 <!-- ── Sync modal ── -->
@@ -2657,6 +2743,265 @@ document.getElementById('sync-pull-no').addEventListener('click',()=>{
 document.getElementById('sync-dl-sw').addEventListener('click',downloadSwJs);
 // Show green dot on sync button if a gistId is already configured
 if(gistId) document.getElementById('sb-sync-dot')?.classList.add('visible');
+
+// ── WoW / Raider.io ──
+const WOW_CLASS_COLORS = {
+  'Death Knight':'#c41e3a','Demon Hunter':'#a330c9','Druid':'#ff7c0a',
+  'Evoker':'#33937f','Hunter':'#aad372','Mage':'#3fc7eb','Monk':'#00ff98',
+  'Paladin':'#f48cba','Priest':'#e0e0e0','Rogue':'#fff468','Shaman':'#0070dd',
+  'Warlock':'#8788ee','Warrior':'#c69b3a'
+};
+const WOW_DIFF_COLORS = { Normal:'#1eff00', Heroic:'#0070ff', Mythic:'#ff8000' };
+
+let wowRegion = localStorage.getItem('tracker_wow_region')||'eu';
+let wowRealm  = localStorage.getItem('tracker_wow_realm')||'';
+let wowName   = localStorage.getItem('tracker_wow_name')||'';
+let wowData   = null;
+let wowSubTab = 'overview';
+
+function rioScoreColor(s){
+  if(s>=2500) return '#e6cc80';
+  if(s>=2000) return '#ff8000';
+  if(s>=1500) return '#a335ee';
+  if(s>=1000) return '#0070ff';
+  if(s>=500)  return '#1eff00';
+  return '#9d9d9d';
+}
+
+function fmtDuration(ms){
+  const t=Math.floor(ms/1000), m=Math.floor(t/60), s=t%60;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtRaidName(key){
+  return key.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+}
+
+async function loadWowChar(){
+  const region=(document.getElementById('wow-region')?.value||wowRegion).trim().toLowerCase();
+  const realm=(document.getElementById('wow-realm')?.value||wowRealm).trim().toLowerCase().replace(/\s+/g,'-');
+  const name=(document.getElementById('wow-name')?.value||wowName).trim();
+  if(!realm||!name){ wowSetBody('<div class="wow-error">Please enter a realm and character name.</div>'); return; }
+  wowRegion=region; wowRealm=realm; wowName=name;
+  localStorage.setItem('tracker_wow_region',region);
+  localStorage.setItem('tracker_wow_realm',realm);
+  localStorage.setItem('tracker_wow_name',name);
+  wowSetBody('<div class="wow-loading">Loading character…</div>');
+  document.getElementById('wow-load-btn').disabled=true;
+  document.getElementById('wow-refresh-btn').disabled=true;
+  try{
+    const fields='mythic_plus_scores_by_season:current,mythic_plus_recent_runs,mythic_plus_best_runs,raid_progression,gear';
+    const url=`https://raider.io/api/v1/characters/profile?region=${region}&realm=${encodeURIComponent(realm)}&name=${encodeURIComponent(name)}&fields=${fields}`;
+    const res=await fetch(url);
+    if(!res.ok){
+      const e=await res.json().catch(()=>({}));
+      throw new Error(e.message||`HTTP ${res.status}`);
+    }
+    wowData=await res.json();
+    renderWowProfile();
+  } catch(e){
+    wowSetBody(`<div class="wow-error">⚠ Could not load character: ${e.message}<br><span style="font-size:11px;color:var(--text-muted)">Check that region, realm and name are correct.</span></div>`);
+  }
+  document.getElementById('wow-load-btn').disabled=false;
+  document.getElementById('wow-refresh-btn').disabled=false;
+}
+
+function wowSetBody(html){ const b=document.getElementById('wow-body'); if(b) b.innerHTML=html; }
+
+function renderWowProfile(){
+  if(!wowData) return;
+  const d=wowData;
+  const classColor=WOW_CLASS_COLORS[d.class]||'var(--text)';
+  const scores=d.mythic_plus_scores_by_season?.[0]?.scores||{};
+  const overall=scores.all||0;
+  const scoreColor=rioScoreColor(overall);
+  const ilvl=d.gear?.item_level_equipped||0;
+  const ilvlFull=d.gear?.item_level_total||0;
+
+  const b=document.getElementById('wow-body'); if(!b) return;
+  b.innerHTML='';
+
+  // ── Character card ──
+  const card=document.createElement('div'); card.className='wow-card';
+  card.innerHTML=`
+    <img class="wow-thumb" src="${d.thumbnail_url||''}" alt="${d.name}" onerror="this.style.display='none'">
+    <div class="wow-char-meta">
+      <div class="wow-char-name" style="color:${classColor}">${d.name}
+        <a class="wow-profile-link" href="${d.profile_url}" target="_blank" rel="noopener">↗ Raider.io</a>
+      </div>
+      <div class="wow-char-sub">${d.active_spec_name||''} ${d.class||''} · ${d.realm||''} <span style="color:var(--text-muted)">(${(d.region||'').toUpperCase()})</span></div>
+      <div class="wow-char-ilvl">Item Level: <strong>${ilvl}</strong><span style="color:var(--text-muted)"> / ${ilvlFull} avg</span></div>
+    </div>
+    <div class="wow-score-block">
+      <div class="wow-score-num" style="color:${scoreColor}">${Math.round(overall)}</div>
+      <div class="wow-score-lbl">Raider.io Score</div>
+    </div>
+    <div class="wow-scores-row">
+      ${['dps','healer','tank'].map(role=>{
+        const v=Math.round(scores[role]||0);
+        return v>0?`<div class="wow-pill"><div class="wow-pill-lbl">${role}</div><div class="wow-pill-val" style="color:${rioScoreColor(v)}">${v}</div></div>`:'';
+      }).join('')}
+    </div>
+  `;
+  b.appendChild(card);
+
+  // ── Sub-tabs ──
+  const tabs=document.createElement('div'); tabs.className='wow-tabs';
+  [['overview','Overview'],['runs','M+ Runs'],['best','Best Runs'],['raids','Raid Progress']].forEach(([id,label])=>{
+    const btn=document.createElement('button');
+    btn.className='wow-tab-btn'+(wowSubTab===id?' active':'');
+    btn.textContent=label;
+    btn.addEventListener('click',()=>{ wowSubTab=id; renderWowSubTab(content); tabs.querySelectorAll('.wow-tab-btn').forEach(b=>b.classList.toggle('active',b===btn)); });
+    tabs.appendChild(btn);
+  });
+  b.appendChild(tabs);
+
+  // ── Sub-tab content ──
+  const content=document.createElement('div');
+  b.appendChild(content);
+  renderWowSubTab(content);
+}
+
+function renderWowSubTab(container){
+  container.innerHTML='';
+  if(!wowData) return;
+  if(wowSubTab==='overview')  renderWowOverview(container);
+  if(wowSubTab==='runs')      renderWowRuns(container, wowData.mythic_plus_recent_runs||[], 'Recent M+ Runs');
+  if(wowSubTab==='best')      renderWowRuns(container, wowData.mythic_plus_best_runs||[], 'Best M+ Runs');
+  if(wowSubTab==='raids')     renderWowRaids(container);
+}
+
+function renderWowOverview(c){
+  const d=wowData;
+  const scores=d.mythic_plus_scores_by_season?.[0]?.scores||{};
+  const recent=d.mythic_plus_recent_runs||[];
+  const prog=d.raid_progression||{};
+  const raids=Object.entries(prog);
+
+  let html='';
+
+  // Quick stats row
+  const totalRuns=recent.length;
+  const timed=recent.filter(r=>r.clear_time_ms<=r.par_time_ms).length;
+  const avgKey=recent.length?Math.round(recent.reduce((a,r)=>a+r.mythic_level,0)/recent.length):0;
+  html+=`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+    ${[
+      ['Recent runs',totalRuns],
+      ['Timed',`${timed}/${totalRuns}`],
+      ['Avg key level','+'+avgKey],
+      ['Item level',d.gear?.item_level_equipped||'—'],
+    ].map(([l,v])=>`<div class="wow-pill" style="flex:1;min-width:80px"><div class="wow-pill-lbl">${l}</div><div class="wow-pill-val" style="color:var(--text)">${v}</div></div>`).join('')}
+  </div>`;
+
+  // Latest raid
+  if(raids.length){
+    const [raidKey,raidData]=raids[0];
+    const m=raidData.mythic_bosses_killed, tot=raidData.total_bosses;
+    html+=`<div class="wow-raid-block" style="margin-bottom:16px">
+      <div class="wow-raid-title">${fmtRaidName(raidKey)}</div>
+      <div class="wow-raid-summary">${raidData.summary||''}</div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Normal</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${raidData.total_bosses?Math.round(raidData.normal_bosses_killed/tot*100):0}%;background:#1eff00"></div></div>
+        <span class="wow-diff-count" style="color:#1eff00">${raidData.normal_bosses_killed}/${tot}</span>
+      </div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Heroic</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${raidData.total_bosses?Math.round(raidData.heroic_bosses_killed/tot*100):0}%;background:#0070ff"></div></div>
+        <span class="wow-diff-count" style="color:#0070ff">${raidData.heroic_bosses_killed}/${tot}</span>
+      </div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Mythic</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${raidData.total_bosses?Math.round(m/tot*100):0}%;background:#ff8000"></div></div>
+        <span class="wow-diff-count" style="color:#ff8000">${m}/${tot}</span>
+      </div>
+    </div>`;
+  }
+
+  // Last 5 runs preview
+  if(recent.length){
+    html+='<div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Recent runs</div>';
+    html+='<table class="wow-runs-table"><thead><tr><th>Dungeon</th><th>Key</th><th>Time</th><th>Score</th></tr></thead><tbody>';
+    recent.slice(0,5).forEach(r=>{
+      const timed=r.clear_time_ms<=r.par_time_ms;
+      const upg=r.num_keystone_upgrades;
+      html+=`<tr>
+        <td>${r.dungeon||r.short_name}</td>
+        <td><span class="wow-key-badge">+${r.mythic_level}</span>${upg>0?`<span class="wow-upg">${'+'.repeat(upg)}</span>`:''}</td>
+        <td class="${timed?'wow-timed':'wow-overtime'}">${fmtDuration(r.clear_time_ms)}</td>
+        <td style="color:${rioScoreColor(r.score)}">${r.score?.toFixed(1)||'—'}</td>
+      </tr>`;
+    });
+    html+='</tbody></table>';
+  }
+
+  c.innerHTML=html;
+}
+
+function renderWowRuns(c, runs, title){
+  if(!runs.length){ c.innerHTML='<div class="wow-loading">No runs found.</div>'; return; }
+  let html=`<table class="wow-runs-table"><thead><tr><th>Dungeon</th><th>Key</th><th>Time</th><th>Upgrades</th><th>Score</th><th>Date</th></tr></thead><tbody>`;
+  runs.forEach(r=>{
+    const timed=r.clear_time_ms<=r.par_time_ms;
+    const upg=r.num_keystone_upgrades;
+    const date=r.completed_at?new Date(r.completed_at).toLocaleDateString('en',{month:'short',day:'numeric'}):'';
+    html+=`<tr>
+      <td>${r.dungeon||r.short_name}</td>
+      <td><span class="wow-key-badge">+${r.mythic_level}</span></td>
+      <td class="${timed?'wow-timed':'wow-overtime'}">${fmtDuration(r.clear_time_ms)}</td>
+      <td>${upg>0?`<span class="wow-timed">${'+'.repeat(upg)}</span>`:'<span style="color:#ef4444">✗</span>'}</td>
+      <td style="color:${rioScoreColor(r.score)}">${r.score?.toFixed(1)||'—'}</td>
+      <td style="color:var(--text-muted)">${date}</td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+function renderWowRaids(c){
+  const prog=wowData?.raid_progression||{};
+  const raids=Object.entries(prog);
+  if(!raids.length){ c.innerHTML='<div class="wow-loading">No raid data found.</div>'; return; }
+  let html='';
+  raids.forEach(([key,data])=>{
+    const tot=data.total_bosses||1;
+    html+=`<div class="wow-raid-block">
+      <div class="wow-raid-title">${fmtRaidName(key)}</div>
+      <div class="wow-raid-summary">${data.summary||''}</div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Normal</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${Math.round(data.normal_bosses_killed/tot*100)}%;background:#1eff00"></div></div>
+        <span class="wow-diff-count" style="color:#1eff00">${data.normal_bosses_killed}/${tot}</span>
+      </div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Heroic</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${Math.round(data.heroic_bosses_killed/tot*100)}%;background:#0070ff"></div></div>
+        <span class="wow-diff-count" style="color:#0070ff">${data.heroic_bosses_killed}/${tot}</span>
+      </div>
+      <div class="wow-diff-row">
+        <span class="wow-diff-lbl">Mythic</span>
+        <div class="wow-bar-wrap"><div class="wow-bar-fill" style="width:${Math.round(data.mythic_bosses_killed/tot*100)}%;background:#ff8000"></div></div>
+        <span class="wow-diff-count" style="color:#ff8000">${data.mythic_bosses_killed}/${tot}</span>
+      </div>
+    </div>`;
+  });
+  c.innerHTML=html;
+}
+
+// WoW init
+(()=>{
+  const rEl=document.getElementById('wow-region');
+  const rlEl=document.getElementById('wow-realm');
+  const nEl=document.getElementById('wow-name');
+  if(rEl && wowRegion) rEl.value=wowRegion;
+  if(rlEl && wowRealm) rlEl.value=wowRealm;
+  if(nEl && wowName)   nEl.value=wowName;
+  document.getElementById('wow-load-btn').addEventListener('click', loadWowChar);
+  document.getElementById('wow-refresh-btn').addEventListener('click', loadWowChar);
+  [rlEl, nEl].forEach(el=>el?.addEventListener('keydown', e=>{ if(e.key==='Enter') loadWowChar(); }));
+  // Auto-load if character was saved before
+  if(wowRealm && wowName) loadWowChar();
+})();
 
 // ── Auto-sync ──
 let _autoSyncTimer = null;
