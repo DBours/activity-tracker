@@ -575,6 +575,7 @@
     </svg>
     <span class="sb-label">Sync</span>
     <span class="sb-sync-dot" id="sb-sync-dot"></span>
+    <span id="sb-sync-age" style="font-size:9px;color:var(--text-muted);display:block;line-height:1;margin-top:1px"></span>
   </button>
 </nav>
 
@@ -2660,9 +2661,34 @@ if(gistId) document.getElementById('sb-sync-dot')?.classList.add('visible');
 // ── Auto-sync ──
 let _autoSyncTimer = null;
 let _autoSyncEnabled = !!(gistToken && gistId);
-let _lastEditTime = 0;   // timestamp of last local data change
+let _lastEditTime = 0;
 
-// Wrap localStorage.setItem to track edits + trigger auto-push
+// ── Helpers ──
+function syncToast(msg, ok=true){
+  let t = document.getElementById('sync-toast');
+  if(!t){ t=document.createElement('div'); t.id='sync-toast';
+    t.style.cssText='position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);'+
+      'padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;z-index:9999;pointer-events:none;'+
+      'transition:opacity .3s;white-space:nowrap;'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.background = ok ? '#10b981' : '#ef4444';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  clearTimeout(t._hide);
+  t._hide = setTimeout(()=>t.style.opacity='0', 2500);
+}
+
+function updateSyncAge(){
+  const el = document.getElementById('sb-sync-age'); if(!el) return;
+  const t = parseInt(localStorage.getItem('tracker_last_push')||'0');
+  if(!t){ el.textContent=''; return; }
+  const mins = Math.round((Date.now()-t)/60000);
+  el.textContent = mins < 1 ? 'just now' : mins === 1 ? '1m ago' : `${mins}m ago`;
+}
+setInterval(updateSyncAge, 30000);
+updateSyncAge();
+
+// ── Wrap localStorage.setItem to track edits + schedule auto-push ──
 const _origSetItem = localStorage.setItem.bind(localStorage);
 localStorage.setItem = function(k, v){
   _origSetItem(k, v);
@@ -2672,7 +2698,7 @@ localStorage.setItem = function(k, v){
   }
 };
 
-// Debounced auto-push: fires 8s after the last local change
+// Debounced auto-push — fires 8s after last change
 function scheduleAutoSync(){
   if(!_autoSyncEnabled) return;
   clearTimeout(_autoSyncTimer);
@@ -2688,52 +2714,57 @@ async function silentPush(){
     const res = await fetch(`https://api.github.com/gists/${gistId}`, {method:'PATCH', headers, body:JSON.stringify(payload)});
     if(res.ok){
       _origSetItem('tracker_last_push', Date.now().toString());
+      updateSyncAge();
       document.getElementById('sb-sync-dot')?.classList.add('visible');
-      const btn = document.getElementById('sb-sync-btn');
-      if(btn){ btn.style.opacity='0.4'; setTimeout(()=>btn.style.opacity='', 500); }
+      syncToast('☁ Saved to cloud');
+    } else {
+      const e = await res.json().catch(()=>({}));
+      syncToast('⚠ Sync failed: '+(e.message||res.status), false);
     }
-  } catch(_){}
+  } catch(err){ syncToast('⚠ Sync error: '+err.message, false); }
 }
 
-// Update last-push timestamp when user manually pushes too
+// Update timestamp when user manually pushes
 const _origGistPush = gistPush;
 gistPush = async function(){
   await _origGistPush();
-  if(gistId) _origSetItem('tracker_last_push', Date.now().toString());
+  if(gistId){ _origSetItem('tracker_last_push', Date.now().toString()); updateSyncAge(); }
 };
 
-// Re-enable auto-sync once token+id are configured for the first time
+// Re-enable auto-sync when token+id are configured for the first time
 document.getElementById('sync-push-btn').addEventListener('click', ()=>{
   setTimeout(()=>{ _autoSyncEnabled = !!(gistToken && gistId); }, 500);
 }, true);
 
-// ── Auto-pull: poll cloud every 60s, apply instantly if newer and user is idle ──
+// ── Auto-pull: poll every 30s, apply instantly if cloud is newer and user is idle ──
+let _polling = false;
 async function pollCloud(){
+  if(_polling) return; // prevent overlapping polls
   if(!gistToken || !gistId) return;
-  // Skip if user edited in the last 15s (let their push finish first)
-  if(Date.now() - _lastEditTime < 15000) return;
+  if(Date.now() - _lastEditTime < 15000) return; // user is actively editing
+  _polling = true;
   try{
     const res = await fetch(`https://api.github.com/gists/${gistId}`,
       {headers:{'Authorization':`Bearer ${gistToken}`,'Accept':'application/vnd.github.v3+json'}});
-    if(!res.ok) return;
+    if(!res.ok){ _polling=false; return; }
     const gist = await res.json();
     const content = gist.files['activity-tracker.json']?.content;
-    if(!content) return;
+    if(!content){ _polling=false; return; }
     const obj = JSON.parse(content);
-    if(!obj._pushedAt) return;
+    if(!obj._pushedAt){ _polling=false; return; }
     const cloudTime = new Date(obj._pushedAt).getTime();
-    const storedLocal = parseInt(localStorage.getItem('tracker_last_push')||'0');
-    if(cloudTime > storedLocal + 5000){
-      // Newer cloud data and user is idle — apply silently
+    const localTime = parseInt(localStorage.getItem('tracker_last_push')||'0');
+    if(cloudTime > localTime + 5000){
+      syncToast('☁ Syncing from cloud…');
       _pendingPull = {obj, token:gistToken, id:gistId};
       applyPull();
     }
   } catch(_){}
+  _polling = false;
 }
 
-// First check 2s after load, then every 60s
 setTimeout(pollCloud, 2000);
-setInterval(pollCloud, 60000);
+setInterval(pollCloud, 30000);
 </script>
 </body>
 </html>
